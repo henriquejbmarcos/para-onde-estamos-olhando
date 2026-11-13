@@ -231,9 +231,9 @@ figcaption{font-size:13px;color:var(--grey);text-align:right}
   <section class="frame small" id="s8" style="left:200px;top:2500px">
     <h2>Para o debate</h2>
     <div class="col" style="gap:30px">
-      <p style="font-size:42px">O Redata deveria exigir publicação por instalação?</p>
-      <p style="font-size:42px">Uma etiqueta de A a G é transparência, ou a forma neoliberal da transparência?</p>
-      <p style="font-size:42px">Abster-se de usar IA é ação política ou cuidado privatizado?</p>
+      <p class="rv" id="d1" style="font-size:42px">O Redata deveria exigir publicação por instalação?</p>
+      <p class="rv" id="d2" style="font-size:42px">Uma etiqueta de A a G é transparência, ou a forma neoliberal da transparência?</p>
+      <p class="rv" id="d3" style="font-size:42px">Abster-se de usar IA é ação política ou cuidado privatizado?</p>
     </div>
   </section>
 
@@ -322,6 +322,9 @@ figcaption{font-size:13px;color:var(--grey);text-align:right}
     {cam:['s7-akenji','s7-back'], show:['s7-duty']},
     {cam:['s7-akenji','s7-back'], show:['s7-back']},
     {cam:'s8'},
+    {cam:'s8', show:['d1']},
+    {cam:'s8', show:['d2']},
+    {cam:'s8', show:['d3']},
     {cam:'all', showAll:true}
   ];
   const rvEls = [...document.querySelectorAll('.rv')];
