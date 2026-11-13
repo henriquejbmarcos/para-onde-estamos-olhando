@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Para onde estamos olhando?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: plain black board. Stations sit on one black canvas, with no edges; a camera moves between them. White text, an orange word here and there. */
+:root{
+  --black:#000;
+  --white:#f4f2ee;
+  --grey:#8c8c8c;
+  --hi:#f3a531;   /* the only highlight colour */
+  --f:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--black);color:var(--white);font-family:var(--f)}
+#stage{position:fixed;inset:0;overflow:hidden}
+#world{position:absolute;left:0;top:0;width:5600px;height:3500px;transform-origin:0 0;will-change:transform;background:var(--black)}
+#world.anim{transition:transform var(--dur,1.1s) cubic-bezier(.65,0,.35,1)}
+@media (prefers-reduced-motion:reduce){#world.anim{transition:none}}
+
+.frame{position:absolute;width:1600px;height:900px;box-sizing:border-box;padding:64px 72px;display:flex;flex-direction:column;gap:40px;background:var(--black)}
+.frame.small{height:700px}
+.ov .frame{cursor:zoom-in}
+h2{font-weight:700;font-size:88px;line-height:1;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:40px;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0;font-size:30px;line-height:1.35}
+.src{font-size:20px;color:var(--grey)}
+.hi{color:var(--hi)}
+.big{font-weight:700;font-size:120px;line-height:1}
+
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-height:0}
+figure img{display:block;width:100%;flex:1;min-height:0;object-fit:cover;max-width:none}
+figcaption{font-size:13px;color:var(--grey);text-align:right}
+
+.rv{transition:opacity .6s ease}
+.rv.off{opacity:0}
+@media (prefers-reduced-motion:reduce){.rv{transition:none}}
+
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;min-height:0}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;min-height:0}
+.side{display:grid;grid-template-columns:620px 1fr;gap:64px;flex:1;min-height:0}
+.quad{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:40px 56px;flex:1;min-height:0}
+.q{display:grid;grid-template-columns:300px 1fr;gap:28px;min-height:0}
+.q figure{height:100%}
+.q p{font-size:24px}
+.q .src{font-size:17px}
+.q h3{font-size:38px}
+
+/* overlay, HUD */
+#cover{position:fixed;left:0;right:0;top:0;padding:max(28px, env(safe-area-inset-top,0px)) max(16px, env(safe-area-inset-right,0px)) 0 max(16px, env(safe-area-inset-left,0px));
+  text-align:center;pointer-events:none;transition:opacity .5s}
+#cover h1{font-weight:700;font-size:clamp(28px,4.2vw,62px);margin:0}
+#cover .sub{font-size:clamp(15px,1.7vw,26px);margin-top:10px}
+#cover .by{font-size:clamp(11px,1.1vw,15px);line-height:1.5;color:var(--grey);margin-top:12px}
+#hud{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:10px max(16px, env(safe-area-inset-right,0px)) max(10px, env(safe-area-inset-bottom,0px)) max(16px, env(safe-area-inset-left,0px));
+  font-size:12px;color:var(--grey);opacity:.2;transition:opacity .3s}
+#hud:hover,#hud:focus-within{opacity:1}
+#hud button{background:var(--black);color:var(--white);border:1px solid #333;font:inherit;padding:6px 10px;cursor:pointer}
+#hud button:focus-visible{outline:2px solid var(--hi)}
+#where{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ctrls{display:flex;gap:6px;flex-shrink:0}
+</style>
+
+<div id="stage">
+<div id="world">
+
+  <!-- 1 -->
+  <section class="frame" id="s1" style="left:200px;top:200px">
+    <div class="side">
+      <figure><img src="1-abertura-01-smartphone.jpg" alt="Mão segurando um celular"><figcaption>Dennis Cortés, CC0</figcaption></figure>
+      <div class="col" style="gap:36px">
+        <h2>1. Cinco gotas</h2>
+        <div class="rv col" id="s1-num">
+          <div class="big">0,24 Wh</div>
+          <div class="big hi">0,26 mL</div>
+          <p style="margin-top:16px">por prompt mediano do Gemini: “menos que nove segundos de televisão”, “cinco gotas de água”</p>
+          <p class="src">Google, agosto de 2025</p>
+        </div>
+        <div class="rv col" id="s1-shame">
+          <p>“Clanker”, “slopper”: a vergonha de usar IA. <span class="src">(Sarkar)</span></p>
+          <p>38 mil consultas ≈ 1 amêndoa. <span class="src">(Sam Altman, 2026)</span></p>
+        </div>
+        <p class="rv" id="s1-q" style="font-size:40px;font-weight:700">Quem produziu esse número? E por que é <span class="hi">esse</span> o número que circula?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="frame" id="s2" style="left:2000px;top:200px">
+    <h2>2. Olhe para você mesmo</h2>
+    <div class="three" style="height:240px">
+      <figure><img src="2-neoliberal-01-canudos.jpg" alt="Canudos de plástico"><figcaption>Morgan Tomos Daniel, CC BY-SA 4.0</figcaption></figure>
+      <figure><img src="2-neoliberal-02-ecobag.jpg" alt="Sacola reutilizável" style="object-position:50% 40%"><figcaption>TooHotToHandle, CC BY-SA 3.0</figcaption></figure>
+      <figure><img src="2-neoliberal-03-lixo-separado.jpg" alt="Lixeiras de coleta seletiva"><figcaption>E961, CC BY 4.0</figcaption></figure>
+    </div>
+    <div class="three">
+      <div class="rv col" id="s2-bp">
+        <h3>A pegada de carbono veio de uma <span class="hi">petrolífera</span></h3>
+        <p style="font-size:24px">BP, 2004–2006: mais de US$ 100 milhões por ano em publicidade e uma calculadora on-line da sua pegada</p>
+        <p class="src">Supran e Oreskes</p>
+      </div>
+      <div class="rv col" id="s2-man">
+        <h3>Individualização da responsabilidade</h3>
+        <p style="font-size:24px">o problema ambiental vira a soma das escolhas de cada um: plantar uma árvore, separar o lixo</p>
+        <p class="src">Maniates, 2001</p>
+      </div>
+      <div class="rv col" id="s2-han">
+        <h3>Não “você deve”, mas “Yes, we can”</h3>
+        <p style="font-size:24px">o sujeito do desempenho se explora sozinho. 75% usam IA no trabalho; 52% relutam em admitir</p>
+        <p class="src">Han · Microsoft e LinkedIn, 2024</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="frame" id="s3" style="left:3800px;top:200px">
+    <h2>3. Quem carrega</h2>
+    <div class="two" id="s3-pair" style="height:430px">
+      <figure><img src="3-feminista-01-varal.jpg" alt="Mulheres estendendo roupa no varal, foto antiga"><figcaption>John B. Sanromá, domínio público</figcaption></figure>
+      <figure><img src="3-feminista-03-datacenters-ashburn.jpg" alt="Vista aérea de data centers em Ashburn, Virgínia"><figcaption>Theodore Christopher, CC0</figcaption></figure>
+    </div>
+    <div class="three">
+      <div class="rv col" id="s3-fraser">
+        <h3>Natureza e cuidado</h3>
+        <p style="font-size:24px">condições de fundo, “sem custo nas contas do capital” <span class="src">(Fraser)</span></p>
+      </div>
+      <div class="rv col" id="s3-load">
+        <h3>Carga mental <span class="hi">verde</span></h3>
+        <p style="font-size:24px">contar prompts, moderar, sentir culpa: cuidado não pago <span class="src">(MacGregor)</span></p>
+      </div>
+      <div class="rv col" id="s3-tronto">
+        <h3>Irresponsabilidade privilegiada</h3>
+        <p style="font-size:24px">quem decide ganha um passe; quem não decide carrega a conta <span class="src">(Tronto)</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="frame" id="s4" style="left:3800px;top:1300px">
+    <div class="side">
+      <figure><img src="3-feminista-04-racks.jpg" alt="Racks de servidores"><figcaption>NOIRLab/NSF/AURA/T. Slovinský, CC BY 4.0</figcaption></figure>
+      <div class="col" style="gap:34px">
+        <h2>4. Não olhe para nada</h2>
+        <p class="rv" id="s4-bannon" style="font-size:36px">“Flood the zone”: não persuadir nem censurar, mas <span class="hi">inundar</span>. <span class="src">(Steve Bannon)</span></p>
+        <p class="rv" id="s4-epa" style="font-size:28px">EUA, março de 2025: a EPA anuncia 31 medidas, “a maior ação desregulatória da história dos EUA”. Nada foi escondido. A notícia se afogou no meio dos escândalos.</p>
+        <p class="rv" id="s4-han" style="font-size:28px">De Debord a Han: do espetáculo imposto à distração que cada um pratica em si.</p>
+        <div class="rv col" id="s4-chain">
+          <p style="font-size:28px">detectar → medir → reportar → <span class="hi">investigar</span> → litigar → reparar</p>
+          <p class="src">O dano leva anos; a atenção dura horas. Basta um elo cair.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="frame" id="s5" style="left:2000px;top:1300px">
+    <h2>5. A boiada passa</h2>
+    <div class="quad">
+      <div class="q rv" id="q1">
+        <figure><img src="5-brasil-05-acude-seco.jpg" alt="Açude seco em Santa Quitéria, Ceará"><figcaption>Porto Neto, CC BY-SA 4.0</figcaption></figure>
+        <div class="col">
+          <h3>“Passar a <span class="hi">boiada</span>”</h3>
+          <p>aproveitar que a imprensa só olha para a covid para mudar as regras ambientais</p>
+          <p class="src">Ricardo Salles, reunião ministerial, 22 de abril de 2020</p>
+        </div>
+      </div>
+      <div class="q rv" id="q2">
+        <div class="big hi" style="align-self:center;text-align:center">52</div>
+        <div class="col">
+          <h3>itens de veto derrubados</h3>
+          <p>na Lei Geral do Licenciamento Ambiental</p>
+          <p class="src">Lei 15.190/2025 · Congresso Nacional, 27 de novembro de 2025</p>
+        </div>
+      </div>
+      <div class="q rv" id="q3">
+        <figure><img src="5-brasil-01-porto-pecem.jpg" alt="O porto do Pecém visto do mar"><figcaption>Anderps, CC BY-SA 3.0</figcaption></figure>
+        <div class="col">
+          <h3>Pecém</h3>
+          <p>data center da ByteDance/TikTok: RAS em vez de EIA/RIMA, água subterrânea em região de seca, consulta aos Anacé</p>
+          <p class="src">ação civil pública do MPF e da DPU, setembro de 2026</p>
+        </div>
+      </div>
+      <div class="q rv" id="q4">
+        <figure><img src="5-brasil-04-terra-seca-ceara.jpg" alt="Terra rachada e barco encalhado no Ceará"><figcaption>Porto Neto, CC BY-SA 4.0</figcaption></figure>
+        <div class="col">
+          <h3>Redata</h3>
+          <p>incentivo fiscal em troca de energia renovável, eficiência hídrica e “relatórios de sustentabilidade”, ou seja, <span class="hi">autorrelato</span></p>
+          <p class="src">Lei 15.504/2026 · teto de 0,05 L/kWh</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="frame" id="s6" style="left:200px;top:1300px">
+    <h2>6. Nem na Europa</h2>
+    <div class="two" style="height:320px">
+      <figure><img src="4-direito-ue-01-microsoft-middenmeer.jpg" alt="Data center da Microsoft em Middenmeer, Holanda"><figcaption>Hay Kranen, CC BY 4.0</figcaption></figure>
+      <figure><img src="4-direito-ue-02-google-eemshaven.jpg" alt="Data center do Google em Eemshaven, Holanda, entre turbinas eólicas"><figcaption>Wvdp, CC0</figcaption></figure>
+    </div>
+    <div class="rv col" id="s6-flow">
+      <p>A lei manda publicar <span class="src">(Diretiva 2023/1791, art. 12)</span></p>
+      <p>→ o regulamento <span class="hi">esconde</span> <span class="src">(Reg. Delegado 2024/1364, art. 5(5))</span></p>
+      <p>→ só 36% reportaram em 2024 <span class="src">(Comissão Europeia, 2025)</span></p>
+    </div>
+    <p class="rv" id="s6-label">2026: uma etiqueta de A a G. Uma nota para escolher, não a conta.</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="frame" id="s7" style="left:2000px;top:2400px">
+    <h2>7. Desindividualizar sem despolitizar</h2>
+    <div class="three" id="s7-scenes" style="height:250px">
+      <figure><img src="1-abertura-01-smartphone.jpg" alt="Celular na mão"><figcaption>a IA · Dennis Cortés, CC0</figcaption></figure>
+      <figure><img src="2-neoliberal-02-ecobag.jpg" alt="Sacola reutilizável" style="object-position:50% 40%"><figcaption>o plástico · TooHotToHandle, CC BY-SA 3.0</figcaption></figure>
+      <figure><img src="6-fechamento-01-aviao.jpg" alt="Avião decolando"><figcaption>o avião · kuhnmi, CC BY 2.0</figcaption></figure>
+    </div>
+    <p class="rv" id="s7-akenji">Mira-se o mais visível, não o mais influente. <span class="src">(Akenji)</span></p>
+    <p class="rv" id="s7-duty" style="font-size:26px">Ação coletiva não é vergonha individual. Deveres para empresas e Estados: publicação por instalação, EIA de verdade, consulta prévia.</p>
+    <p class="rv" id="s7-back" style="font-size:48px;font-weight:700">Cinco gotas. De qual <span class="hi">data center</span>?</p>
+  </section>
+
+  <!-- debate -->
+  <section class="frame small" id="s8" style="left:200px;top:2500px">
+    <h2>Para o debate</h2>
+    <div class="col" style="gap:30px">
+      <p style="font-size:42px">O Redata deveria exigir publicação por instalação?</p>
+      <p style="font-size:42px">Uma etiqueta de A a G é transparência, ou a forma neoliberal da transparência?</p>
+      <p style="font-size:42px">Abster-se de usar IA é ação política ou cuidado privatizado?</p>
+    </div>
+  </section>
+
+  <!-- credits -->
+  <section class="frame small" id="s9" style="left:3800px;top:2500px">
+    <h2 style="font-size:56px">Imagens <span class="src">(Wikimedia Commons)</span></h2>
+    <div style="columns:2;column-gap:56px;font-size:17px;line-height:1.7;color:var(--grey)">
+      <div>Celular · Dennis Cortés, CC0</div>
+      <div>Canudos · Morgan Tomos Daniel, CC BY-SA 4.0</div>
+      <div>Sacola reutilizável · TooHotToHandle, CC BY-SA 3.0</div>
+      <div>Lixeiras · E961, CC BY 4.0</div>
+      <div>Varal · John B. Sanromá (1900–1997), domínio público</div>
+      <div>Data centers em Ashburn · Theodore Christopher, CC0</div>
+      <div>Racks de servidores · NOIRLab/NSF/AURA/T. Slovinský, CC BY 4.0</div>
+      <div>Açude seco, Santa Quitéria (CE) · Porto Neto, CC BY-SA 4.0</div>
+      <div>Porto do Pecém · Anderps, CC BY-SA 3.0</div>
+      <div>Terra seca, Ceará · Porto Neto, CC BY-SA 4.0</div>
+      <div>Microsoft, Middenmeer · Hay Kranen, CC BY 4.0</div>
+      <div>Google, Eemshaven · Wvdp, CC0</div>
+      <div>Avião, Zurique · kuhnmi, CC BY 2.0</div>
+    </div>
+  </section>
+</div>
+</div>
+
+<div id="cover">
+  <h1>Para onde estamos olhando?</h1>
+  <div class="sub">Inteligência artificial, data centers e desregulamentação ambiental</div>
+  <div class="by"><span style="color:var(--white);font-size:clamp(15px,1.7vw,26px);font-weight:600;display:block;margin-bottom:4px">Dr. Henrique Marcos</span>Departamento de Fundamentos do Direito · Faculdade de Direito · Universidade de Maastricht<br>Pesquisa financiada pela NWO (Veni, VI.Veni.251R.071)</div>
+</div>
+
+<nav id="hud" aria-label="Navegação">
+  <span id="where">Visão geral</span>
+  <div class="ctrls">
+    <button id="b-prev" type="button" aria-label="Voltar">←</button>
+    <button id="b-map" type="button">mapa (O)</button>
+    <button id="b-full" type="button">tela cheia (F)</button>
+    <button id="b-next" type="button" aria-label="Avançar">→</button>
+  </div>
+</nav>
+
+<script>
+(() => {
+  const world = document.getElementById('world');
+  const cover = document.getElementById('cover');
+  const where = document.getElementById('where');
+  const names = {s1:'01 · Cinco gotas', s2:'02 · Olhe para você mesmo', s3:'03 · Quem carrega', s4:'04 · Não olhe para nada',
+    s5:'05 · A boiada passa', s6:'06 · Nem na Europa', s7:'07 · Desindividualizar sem despolitizar', s8:'Para o debate', s9:'Imagens'};
+
+  // Each step: camera target (element id or 'all') and elements revealed from this step on.
+  const steps = [
+    {cam:'all'},
+    {cam:'s1'},
+    {cam:'s1-num', show:['s1-num']},
+    {cam:'s1-shame', show:['s1-shame']},
+    {cam:'s1', show:['s1-q']},
+    {cam:'s2'},
+    {cam:'s2', show:['s2-bp']},
+    {cam:'s2', show:['s2-man']},
+    {cam:'s2', show:['s2-han']},
+    {cam:'s3'},
+    {cam:'s3-pair', show:['s3-fraser']},
+    {cam:'s3', show:['s3-load']},
+    {cam:'s3', show:['s3-tronto']},
+    {cam:'s4'},
+    {cam:'s4', show:['s4-bannon']},
+    {cam:'s4', show:['s4-epa']},
+    {cam:'s4', show:['s4-han']},
+    {cam:'s4', show:['s4-chain']},
+    {cam:'s5'},
+    {cam:'q1', show:['q1']}, {cam:'q2', show:['q2']}, {cam:'q3', show:['q3']}, {cam:'q4', show:['q4']},
+    {cam:'s5'},
+    {cam:'s6'},
+    {cam:'s6', show:['s6-flow']},
+    {cam:'s6', show:['s6-label']},
+    {cam:'s7'},
+    {cam:'s7', show:['s7-akenji']},
+    {cam:'s7', show:['s7-duty']},
+    {cam:'s7', show:['s7-back']},
+    {cam:'s8'},
+    {cam:'all', showAll:true}
+  ];
+  const rvEls = [...document.querySelectorAll('.rv')];
+  const firstStepOf = {};
+  steps.forEach((s,i) => { const st = stationOf(s.cam); if (st && firstStepOf[st]===undefined) firstStepOf[st]=i; });
+  firstStepOf.s9 = null;
+
+  let i = 0, overview = false, cur = null, timer = null;
+
+  function stationOf(id){
+    if (id==='all') return null;
+    const el = document.getElementById(id);
+    return el ? el.closest('.frame').id : null;
+  }
+  function rectOf(id){
+    if (id==='all') return {x:120,y:-760,w:5360,h:4260};
+    const el = document.getElementById(id);
+    let x=0,y=0,e=el;
+    while (e && e!==world){ x+=e.offsetLeft; y+=e.offsetTop; e=e.offsetParent; }
+    return {x,y,w:el.offsetWidth,h:el.offsetHeight};
+  }
+  function place(r, pad, dur){
+    const vw = innerWidth, vh = innerHeight;
+    const k = pad || 1;
+    // pad > 1 widens the context around small elements
+    const cx = r.x + r.w/2, cy = r.y + r.h/2;
+    const ww = Math.max(r.w*(k>1?k:1.06), 10), hh = Math.max(r.h*(k>1?k:1.06), 10);
+    const s = Math.min(vw/ww, vh*0.94/hh);
+    const tx = vw/2 - cx*s, ty = vh/2 - cy*s;
+    world.style.setProperty('--dur', (dur||1.1)+'s');
+    world.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
+  }
+  function union(a,b){ const x=Math.min(a.x,b.x), y=Math.min(a.y,b.y); return {x,y,w:Math.max(a.x+a.w,b.x+b.w)-x,h:Math.max(a.y+a.h,b.y+b.h)-y}; }
+  function fly(r, pad){
+    clearTimeout(timer);
+    const far = cur && (Math.abs((cur.x+cur.w/2)-(r.x+r.w/2)) > 1900 || Math.abs((cur.y+cur.h/2)-(r.y+r.h/2)) > 1100);
+    if (far && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+      place(union(cur,r), 1, .7);
+      timer = setTimeout(() => place(r, pad, .9), 720);
+    } else place(r, pad, 1.1);
+    cur = r;
+  }
+  function render(animate=true){
+    world.classList.toggle('anim', animate);
+    const s = steps[i];
+    const shown = new Set();
+    let all = overview || s.showAll;
+    for (let k=0;k<=i;k++) (steps[k].show||[]).forEach(id=>shown.add(id));
+    rvEls.forEach(el => el.classList.toggle('off', !(all || shown.has(el.id))));
+    const camId = overview ? 'all' : s.cam;
+    const r = rectOf(camId);
+    if (animate) fly(r, overview?1:s.pad); else { place(r, overview?1:s.pad); cur=r; }
+    const isAll = camId==='all';
+    document.body.classList.toggle('ov', isAll);
+    cover.style.opacity = isAll ? 1 : 0;
+    const st = stationOf(s.cam);
+    where.textContent = overview || !st ? 'Visão geral · clique numa parada' : `${names[st]}  ·  ${i}/${steps.length-1}`;
+  }
+  function go(n){ overview=false; i=Math.max(0,Math.min(steps.length-1,n)); render(); }
+  function next(){ if (overview){ overview=false; render(); return; } go(i+1); }
+  function prev(){ if (overview){ overview=false; render(); return; } go(i-1); }
+  function toggleMap(){ overview=!overview; render(); }
+  function full(){ try{ document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(()=>{}); }catch(e){} }
+
+  addEventListener('keydown', e => {
+    if (e.metaKey||e.ctrlKey||e.altKey) return;
+    const k = e.key;
+    if (['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(k)){ e.preventDefault(); next(); }
+    else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(k)){ e.preventDefault(); prev(); }
+    else if (k==='o'||k==='O'||k==='Escape'){ toggleMap(); }
+    else if (k==='f'||k==='F'){ full(); }
+    else if (k==='Home'){ go(0); }
+    else if (/^[1-7]$/.test(k)){ go(firstStepOf['s'+k]); }
+  });
+  document.querySelectorAll('.frame').forEach(f => f.addEventListener('click', () => {
+    if (!document.body.classList.contains('ov')) return;
+    const n = firstStepOf[f.id];
+    if (n==null){ overview=false; cur=null; const r=rectOf(f.id); world.classList.add('anim'); fly(r); cover.style.opacity=0; document.body.classList.remove('ov'); where.textContent=names[f.id]; return; }
+    go(n);
+  }));
+  document.getElementById('b-next').onclick = next;
+  document.getElementById('b-prev').onclick = prev;
+  document.getElementById('b-map').onclick = toggleMap;
+  document.getElementById('b-full').onclick = full;
+  addEventListener('resize', () => render(false));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(()=>render(false));
+  render(false);
+})();
+</script>
